@@ -1,0 +1,182 @@
+﻿<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]>
+<html class="no-js ie6 oldie" lang="cs"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js ie7 oldie" lang="cs"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js ie8 oldie" lang="cs"> <![endif]-->
+<!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="cs"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Resto CZ</title>
+    <meta name="description" content="Resto CZ">
+    <meta name="author" content="meumobi.com">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="css/style.css">
+    <link href='http://fonts.googleapis.com/css?family=Cantata+One&subset=latin,latin-ext' rel='stylesheet'
+          type='text/css'>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/modernizr.custom.27466.js"></script>
+    <script type="text/javascript" src="scripts/css3-mediaqueries.js"></script>
+    <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBazjTW__1qlc-JO32gtitMgsRVBFO9GQ8&sensor=false"></script>
+	<script>
+			$(function() {
+						var footer = $('.footer');
+            var content = $('.content');
+            var lat_lng = new google.maps.LatLng(50.083882, 14.430177);
+            var mapOptions = {
+                center: lat_lng,
+                zoom: 17,
+                panControl: false,
+                streetViewControl: false,
+                zoomControl: false,
+                mapTypeControl: false,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map_loaded = false;
+            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+            
+            var marker = new google.maps.Marker({
+                position: lat_lng,
+                map: map,
+                title: 'Káva Růžová'
+            });
+            
+            var overlay = new google.maps.OverlayView();
+            overlay.draw = function() {};
+            overlay.setMap(map);
+
+            function updateGoogleLogoToBeVisible() {
+              if (map_loaded) {
+                var logo = $("#map div a img").parentsUntil("a").parentsUntil("div").parent();
+                logo.css("margin-left", $(".content").width() + 5);
+              }
+            }
+            
+            function updateMapCenter() {
+              if (map_loaded) {
+                map.setCenter(lat_lng);
+                var map_div = $("#map");
+                var x = map_div.width() - $(".content").width();
+                var latlng = overlay.getProjection().fromContainerPixelToLatLng(new google.maps.Point(x-x/2, map_div.height()/2));
+                map.panTo(latlng);
+              }
+            }
+            
+            google.maps.event.addListenerOnce(map, 'idle', function() { 
+              map_loaded = true;
+              updateGoogleLogoToBeVisible();
+              updateMapCenter();
+            });
+            
+            
+
+            function updateFooterPosition() {
+                var footer_position = footer.position();
+                var footer_height = footer.outerHeight();
+                var footer_top = parseInt(footer.css('top'), 10);
+                var content_height = content.height();
+
+                if (content_height - footer_height - (footer_position.top - footer_top) > 0) {
+                    footer.css('top', content_height - footer_height - (footer_position.top - footer_top));
+                }
+                //$('#map').width($(window).width() - 240);
+
+                updateGoogleLogoToBeVisible();
+
+                google.maps.event.trigger(map, 'resize');
+                
+                updateMapCenter();
+                
+            }
+
+            $(window).resize(function() {
+                updateFooterPosition();
+            });
+
+            updateFooterPosition();
+
+        });
+    </script>
+	<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', '']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+
+<body>
+    <header>
+        <img class="logo" src="images/kava-ruzova.png" width="159" height="78" alt="Káva Růžová" title="Káva Růžová"/>
+    </header>
+    <div id="map-holder"><div id="map"></div></div>
+		<div class="content" id="app">
+        <h1>{{ title }}<br>lahodnou, čerstvě<br>praženou kávu</h1>
+
+        <hr>
+
+	<h3>{{ description }}</h3>
+	<h3>Kromě kávy si od nás můžete odnést vybavení<br>a doplňky pro domácí přípravu vynikající kávy.</h3>
+
+        <hr>
+
+        <h2>Kde nás najdete?</h2>
+
+        <address>Růžová 970/7<br>Praha 1 - Nové Město<br>110 00</address>
+
+        <hr>
+
+        <h2>Otevírací doba:</h2>
+
+        <p class="openhours">Po - Pá 7:30 - 20:00</p>
+
+        <div class="footer">
+            <p>
+                Provozuje: Jan Ptasznik,
+                <a href="mailto:info@kavaruzova.cz"
+                   title="info@kavaruzova.cz">info@kavaruzova.cz</a><br>
+                IČ: 73849090, Praha 1 - Nové Město, Růžová 970/7, PSČ 110&nbsp;00
+            </p>
+            <a href="http://www.netfinity.cz" title="Netfinity Digital Media s.r.o.">
+                <img src="images/netfinity.png" width="61" height="19" alt="Netfinity Digital Media s.r.o."
+                 title="Netfinity Digital Media s.r.o." />
+            </a>
+        </div>
+    </div>
+    <footer>
+        <img class="logo" src="images/coffee-source.png" width="119" height="90 " alt="Coffee Source" title="Coffee Source"/>
+    </footer>
+	  <script>
+	    new Vue({
+	      el: '#app',
+	      data: {
+	        title: 'Coup d\'état!',
+	        description: 'Adresse incontournable à mi-chemin entre le Musée du Louvre et le Jardin du Palais Royal, le Coup d\'État est le lieu de prédilection pour vos rencontres autour d\'une cuisine raffinée.',
+	        gitterURL: 'https://gitter.im/vuejs/vue',
+	        forumURL: 'http://forum.vuejs.org/'
+	      },
+	      methods: {
+	        humanizeURL: function (url) {
+	          return url
+	            .replace(/^https?:\/\//, '')
+	            .replace(/\/$/, '')
+	        }
+	      }
+	    })
+	  </script>
+</body>
+</html>
